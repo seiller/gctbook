@@ -1,0 +1,116 @@
+\section{Lecture 11:  Ankit Garg -- Matrix scaling}
+
+\subsection{The matrix scaling problem}
+
+\begin{definition}
+A matrix with real positive coefficients $A\in \realN_{\geq 0}^{n\times n}$ is doubly stochastic when all its rows and columns sum to $1$.
+\end{definition}
+
+The scaling problem is stated as follows: given a matrix with real positive coefficients $A\in \realN_{\geq 0}^{n\times n}$; can you find a scaling of rows and columns that makes it doubly stochastic?
+
+Examples and non-examples.
+
+\begin{definition}
+A matrix is an \emph{approximately scalable matrix} -- or \emph{scalable in the limit} when.... (Note: the example is given with epsilons, but basically one considers any sequence of scalings that converges to a doubly stochastic matrix.)
+\end{definition}
+
+\begin{definition}
+Let $A$ be an $n\times n$ matrix. We write $\supp{A}$ the $n\times n$ matrix $(1-\delta_0(a_{i,j}))_{0\leqslant i,j \leqslant n}$, where $\delta_0(x)=1$ if $x=0$ and $\delta_0(x)=0$ otherwise.
+\end{definition}
+
+\begin{theorem}
+The following statements are equivalent: 
+\begin{enumerate}
+\item $A$ is scalable in the limit
+\item $\supp{A}$ has a perfect matching
+\end{enumerate}
+\end{theorem}
+
+Usually the doubly stochastic matrix one obtains is unique, and can be thought of as a convex combination of the different perfect matchings.
+
+\begin{proof}
+We prove one implication for the moment. Suppose $A$ is scalable in the limit. Let the limit be a matrix $B$. Then $\supp{B}$ is a subset of the support of $A$, i.e. $\supp{B}_{i,j}\leqslant \supp{A}_{i,j}$ for all $1\leqslant i,j \leqslant n$. Since $B$ is doubly stochastic, we use the Birckhoff - von Neumann theorem stating that a doubly stochastic matrix is a convex combination of permutations. In particular $\supp{B}$ contains a perfect matching.
+
+We will see the converse implication later; in fact we will see an algorithmic version of it.
+\end{proof}
+
+\subsection{Connections to invariant theory}
+
+Consider the action $\alpha$ of $\ST[n]{\complexN}\times \ST[n]{\complexN}$ on $n\times n$ matrices $\matrices[n]{\complexN}$, where
+\[ \ST[n]{\complexN} = \{ \diag{t_1,\dots, t_n} \mid \prod_i t_i=1\}. \]
+and the action is defined by $(A,B)\cdot M = AMB$.
+
+Question: What is the null cone of this group action? By definition:
+\[ \nullcone{\alpha} = \{ M \mid \exists ((A_i,B_i))_{i\geqslant 0}, \lim_{k\rightarrow \infty} (A_k, B_k)\cdot M = 0 \}. \]
+ 
+\begin{theorem}
+ Let $M$ be a $n\times n$ matrix, and $A$ a real positive $n\times n$ matrix given by $A_i,j = \abs{M_i,j}^2$. The following are equivalent:
+ \begin{itemize}
+ \item $A$ is scalable in limit;
+ \item $\supp{A}$ contains a perfect matching;
+ \item $M$ is not in $\nullcone{\alpha}$.
+ \end{itemize}
+ \end{theorem}
+ 
+\begin{proof}
+\begin{itemize}
+\item \textbf{(2 implies 3)} We suppose $\supp{M}$ contains a perfect matching. Then there exists $\sigma\in \permutationgroup[n]$ such that $\prod_{i=1}^n M_{i,\sigma(i)} \neq 0$. Let $(A,B)$ be an element of $(\ST{\complexN})^2$ and let $M'=(A,B)\cdot M$. Then 
+\begin{align*}
+\prod_{i=1}^n M'_{i,\sigma(i)} 
+	&= \prod_{i=1}^n M_{i,\sigma(i)} A_{i,i} B_{\sigma(i),\sigma(i)} \\
+	&= \left( \prod M_{i,\sigma(i)} \right)  \left( \prod A_{i,i} \right)  \left( \prod B_{\sigma(i),\sigma(i)} \right) \\
+	&= \prod_{i=1}^n M_{i,\sigma(i)}
+\end{align*}
+Thus the latter polynomial is an invariant polynomial w.r.t. the group action. Consider $((A_i,B_i))_{i\geqslant 0}$ a sequence of group elements, and let $M^{(k)}$ be the matrix $(A_k,B_k)\cdot M$. Then $\prod_{i=1}^n M^{(k)}_{i,\sigma(i)}  = \prod_{i=1}^n M_{i,\sigma(i)}$. By continuity, this is true of the limit $M*=\lim_{k\rightarrow\infty} M^{(k)}$. Thus $M*\neq 0$, which shows that $M$ does not belong to $\nullcone{\alpha}$.
+ 
+\item \textbf{(3 implies 2)} We now suppose that $\supp{M}$ does not contain a perfect matching, and we prove that $M$ lies in the null cone. We will use Hall's theorem stating that if a bipartite graph does not have a perfect matching, then there exists a (\textbf{tobefilled}). I.e. there exists subsets $S,T$ of $[n]=\{1,2,\dots,n\}$ such that $\size{S}+\size{T} \geq n+1$, and $M_{S,T}=0$.
+ \textbf{(Draw the matrix with a big block of zeroes.)} Multiply all non-zero lines and columns by small $\delta$, and the lines and columns involving the zeroes block by large $\Delta$. We want to ensure the product of all scalars is 1, that is $\Delta=\frac{1}{\delta^c}$ for some constant $c<1$. We can then show that all coefficients will go to $0$. 
+ We have proven: there exists a sequence $((A_i,B_i))_{i\geqslant 0}$ such that $(A_i,B_i)\in T_n$ (not $\ST{\complexN}$); $\det(A_k)\det(B_k)=1$; $\lim_{k\rightarrow\infty} A_k M B_k =0$. Then chose $\tilde{A}_k = \frac{A_k}{\det(A_k)^{\frac{1}{n}}}$, same for $B_k$.
+ \end{itemize}
+ \end{proof}
+ 
+ \subsection{Algorithms}
+ 
+ Sinkhorn's algorithm.
+ Given $A\in \realN_{\geq 0}^{n\times n}$, one can:
+ \begin{enumerate} 
+ \item Row-normalise: let $r_1,\dots r_n$ be the row sums of $A$. Then we can multiply row $i$ of $A$ by $r_i^-1$. 
+ \item Column-normalise: Let $c_1,\dots,c_n$ be the column sums of $A$. Then multiply column $i$ by $c_i^-1$.
+ \end{enumerate}
+ Sinkhorn's algorithm is the following. Repeat for N steps: \{ (1) row-normalise; (2) column-normalise \}; Output result.
+	
+Not only it works, but it is pretty efficient. 
+ 
+\begin{definition}
+Given a matrix $A$, we define the distance from $A$ to the set of doubly stochastic matrices:
+\[
+\mathrm{ds}(A) := \sum_{i=1}^n (r_i-1)^2 + \sum_{j=1}^n (c_j-1)^2,
+\]
+where $r_i$ (resp. $c_i$) are the rows (resp. columns) sums of $A$.
+\end{definition}
+
+Input model. Restrict to rational matrices. A a rational matrix (positive coefficients). Each entry $A_{i,j} = \frac{b_i,j}{a_i,j}$ where $b_{i,j},q_{i,j}$ are integers and can be described using $b$ bits. $2^b\geq A_{i,j} \geq 2^{-b}$.
+
+\begin{lemma} 
+Suppose $A'$ is row (resp. column) normalised with $\prod_i A'_{i,i} \neq 0$ and $\mathrm{ds}(A')\geq \epsilon$. Then column (resp. row) normalisation increases $\prod_i A'_{i,i}$ by a factor of $e^{\epsilon / 6}$.
+\end{lemma}
+
+\begin{proof} 
+Assume $A'$ is row normalised, and let $A''$ be the column-normalisationof $A'$ and $c_1, \dots, c_n$ the column sums of $A'$. We have $\prod_{i=1}^n A''_{i,i} = \prod_{i=1}^n \frac{A'_{i,i}}{\prod_i c_i}$. Since $A'$ is row-normalised, then $\sum_{i=1}^n c_i=\sum_{i=1}^n r_i = n$. Thus $\prod c_i \leq (\frac{\sum c_i}{n})^n =1$ (AM-GM inequality). We know that $\mathrm{ds}(A') \geq \epsilon$. Now the rest is an easy exercise: let $\lambda_1,\dots,\lambda_n \geq 0$ be real numbers summing up to $n$, and such that $\sum (\lambda_i-1)^2 \geq \epsilon$, then $\prod_i \lambda_i \leq e^{-\epsilon/6}$.
+\end{proof}
+
+\begin{theorem}[Linial, Samorodnitsky, Wigderson '00]
+Suppose given a matrix $A$ such that $\supp{A}$ has a perfect matching. Then Sinkhorn's algorithm will output $\hat{A}$ such that $\mathrm{ds}(\hat{A})\leq \epsilon$ in $N=O(n \frac{(\log(n)+b)}{\epsilon})$ steps.
+\end{theorem}
+
+\begin{proof} There exists $\sigma \in \permutationgroup$ such that $\prod_i A_{i,\sigma(i)} \neq 0$. W.l.o.g. $\sigma=\identity$ so that $\prod_i A_{i,i} \neq 0$. Let $A'$ be the matrix obtained by row-normalising $A$. Each $A'_{i,i}\neq 0$. $A'_{i,i}\geq \frac{1}{n 2^{2b}}$. Thus $\prod_i A'_{i,i}\geq \left( \frac{1}{n 2^{2b}} \right) ^n$.
+
+Start with A' row-normalised. Then:
+\begin{itemize}
+\item $\prod  A'_i,i \geq \left(\frac{a}{n 2^{2b}}\right)^n$;
+\item As long as $\mathrm{ds}(A')\geq \epsilon$, each operation will increase $\prod A'_{i,i}$ by a factor of $e^{\epsilon /6}$
+\item $\prod A'_{i,i} \geq 1$ if $A'$ is a row or column-normalised
+\end{itemize}
+Thus in $O(...)$ steps, the algorithm will output $\hat{A}$ such that $\mathrm{ds}(\hat{A})\leq \epsilon$.
+\end{proof}
+

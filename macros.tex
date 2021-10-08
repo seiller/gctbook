@@ -6,12 +6,49 @@
 \usepackage{hyperref}
 \usepackage{cleveref}
 
-% Mathematical Notations
+% Environments
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{comment}[theorem]{Comment}
+\newtheorem{Notations}[theorem]{Notations}
 
 
+% Mathematical Notations: Fields
 
+\newcommand{\naturalN}{\mathbb{N}}
+\newcommand{\integerN}{\mathbb{Z}}
+\newcommand{\rationalN}{\mathbb{Q}}
+\newcommand{\realN}{\mathbb{R}}
+\newcommand{\complexN}{\mathbb{C}}
 
+% Mathematical Notations: Basics
 
+\newcommand{\abs}[1]{\mathopen{|}#1\mathclose{|}} % Absolute value / modulus
+\newcommand{\size}[1]{\mathrm{card}(#1)} % cardinal / size of set / graph / ... 
+\newcommand{\identity}[1][]{\mathrm{Id}_{#1}} % Identity 
+
+% Mathematical Notations: Matrices
+
+\newcommand{\diag}[1]{\mathrm{diag}(#1)}   % Diagonal matrices defined from the list of coeficients
+\newcommand{\matrices}[2][n]{\mathcal{M}_{#1}(#2)}   % Algebra of #1 matrices -- for square matrices, we write #1=n instead of $n\times n$.
+
+\newcommand{\ST}[2][n]{\mathbf{ST}_{#1}(#2)}
+
+\newcommand{\supp}[1]{\mathrm{supp}(#1)} % Support: used in lecture-11 with argument a matrix, returning the 0-1-matrix which is the adjacency matrix of the underlying graph.
+
+% Mathematical Notations: Groups and Actions
+
+\newcommand{\permutationgroup}[1][n]{\mathfrak{S}_{#1}} % group of permutations on n elements sets.
+
+\newcommand{\nullcone}[1]{\mathcal{N}(#1)}
 
 
 
